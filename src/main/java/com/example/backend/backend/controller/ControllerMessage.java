@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.example.backend.backend.service.EmailService;
 import com.example.backend.backend.model.Message;
+import com.example.backend.backend.repository.MessageRepository;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
@@ -18,9 +19,20 @@ public class ControllerMessage {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private MessageRepository messageRepository;
+
     @PostMapping("/send-email")
     public String sendEmail(@RequestBody Message message) {
-        emailService.sendEmail(message.getEmail(), message.getName(), message.getContent());
+        // Save message to database
+        messageRepository.save(message);
+
+        // Send email to admin with client message details
+        emailService.sendEmailToAdmin(message.getName(), message.getEmail(), message.getContent());
+
+        // Send confirmation email to client
+        emailService.sendConfirmationEmail(message.getEmail(), message.getName());
+
         return "Email sent successfully";
     }
 }
