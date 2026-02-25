@@ -16,31 +16,34 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
-                    .cors(Customizer.withDefaults())
-                    .csrf(csrf -> csrf.disabl
-                    .authorizeHttpRequests(auth -> 
-                                .requestMatchers("/**").per
+                .cors(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().permitAll());
+
         return http.build();
     }
 
     @Bean
     public CorsFilter corsFilter() {
-        CorsConfiguration config = new CorsConfiguration();
 
+        CorsConfiguration config = new CorsConfiguration();
 
         config.setAllowedOriginPatterns(List.of(
                 "https://portafolio-suasnabar.vercel.app",
-                "http://localhost:5173"
-        ));
+                "http://localhost:5173"));
 
-
+        config.setAllowedMethods(List.of("*"));
         config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
         config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+
         source.registerCorsConfiguration("/**", config);
-        
+
         return new CorsFilter(source);
     }
 }
