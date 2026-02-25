@@ -11,7 +11,7 @@ import com.example.backend.backend.service.EmailService;
 import com.example.backend.backend.model.Message;
 import com.example.backend.backend.repository.MessageRepository;
 
-@CrossOrigin(origins = {"https://portafolio-suansabar.vercel.app"})@RestController
+@CrossOrigin(origins = {"https://portafolio-suasnabar.vercel.app"})@RestController
 @RequestMapping("/api")
 public class ControllerMessage {
 
