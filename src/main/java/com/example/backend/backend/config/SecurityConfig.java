@@ -5,10 +5,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 import org.springframework.security.config.Customizer;
-
 import java.util.List;
 
 @Configuration
@@ -26,24 +25,24 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public CorsFilter corsFilter() {
+@Bean
+public CorsConfigurationSource corsConfigurationSource() { 
+    CorsConfiguration config = new CorsConfiguration();
 
-        CorsConfiguration config = new CorsConfiguration();
+    config.setAllowedOriginPatterns(List.of(
+            "https://portafolio-suasnabar.vercel.app",
+            "http://localhost:5173"));
 
-        config.setAllowedOriginPatterns(List.of(
-                "https://portafolio-suasnabar.vercel.app",
-                "http://localhost:5173"));
+    // Definir métodos explícitos es una excelente práctica
+    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); 
+    
+    config.setAllowedHeaders(List.of("*"));
+    config.setAllowCredentials(true);
+    config.setMaxAge(3600L);
 
-        config.setAllowedMethods(List.of("*"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true);
-        config.setMaxAge(3600L);
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", config);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-
-        source.registerCorsConfiguration("/**", config);
-
-        return new CorsFilter(source);
-    }
+    return source; // Retornamos la fuente de configuración
+}
 }

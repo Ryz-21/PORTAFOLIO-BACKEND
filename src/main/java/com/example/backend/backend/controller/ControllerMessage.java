@@ -2,11 +2,9 @@ package com.example.backend.backend.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
 import com.example.backend.backend.service.EmailService;
 import com.example.backend.backend.model.Message;
 import com.example.backend.backend.repository.MessageRepository;
