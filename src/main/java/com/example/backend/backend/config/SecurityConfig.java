@@ -7,7 +7,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.security.config.Customizer;
 import java.util.List;
 
 @Configuration
@@ -17,7 +16,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                .cors(Customizer.withDefaults())
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().permitAll());
@@ -29,20 +28,22 @@ public class SecurityConfig {
 public CorsConfigurationSource corsConfigurationSource() { 
     CorsConfiguration config = new CorsConfiguration();
 
-    config.setAllowedOriginPatterns(List.of(
-            "https://portafolio-suasnabar.vercel.app",
-            "http://localhost:5173"));
+    // Usamos el comodín para probar y descartar errores de URL
+    config.setAllowedOriginPatterns(List.of("*")); 
 
-    // Definir métodos explícitos es una excelente práctica
     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); 
+    config.setAllowedHeaders(List.of("Content-Type", "Authorization", "X-Requested-With", "Accept"));
     
-    config.setAllowedHeaders(List.of("*"));
-    config.setAllowCredentials(true);
+    // IMPORTANTE: Si usas "*" en OriginPatterns, a veces 'setAllowCredentials(true)' 
+    // puede dar problemas en navegadores muy estrictos. 
+    // Si sigue fallando, prueba cambiando true por false.
+    config.setAllowCredentials(true); 
+    
     config.setMaxAge(3600L);
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", config);
 
-    return source; // Retornamos la fuente de configuración
+    return source;
 }
 }
