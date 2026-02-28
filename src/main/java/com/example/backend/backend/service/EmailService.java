@@ -24,20 +24,27 @@ public class EmailService {
     }
 
     public void sendEmailToAdmin(String clientName, String clientEmail, String clientMessage) {
-        String subject = "Nuevo mensaje de contacto de: " + clientName;
-        String text = "Has recibido un nuevo mensaje de contacto.\n\n" +
-                      "Nombre: " + clientName + "\n" +
-                      "Email: " + clientEmail + "\n" +
-                      "Mensaje:\n" + clientMessage + "\n\n" +
-                      "Responde directamente a: " + clientEmail;
-        sendEmail(adminEmail, subject, text);
-    }
+    SimpleMailMessage message = new SimpleMailMessage();
+    message.setTo(adminEmail); 
+    message.setSubject("Nuevo mensaje de: " + clientName);
+    
+    String cuerpoAviso = "Has recibido un nuevo mensaje de contacto.\n\n" +
+                         "Nombre: " + clientName + "\n" +
+                         "Email: " + clientEmail + "\n" +
+                         "Mensaje:\n" + clientMessage + "\n\n" +
+                         "-------------------------------------------\n" +
+                         "Puedes responder directamente a este correo.";
+
+    message.setText(cuerpoAviso);
+    message.setReplyTo(clientEmail); 
+    mailSender.send(message);
+}
 
     public void sendConfirmationEmail(String clientEmail, String clientName) {
         String subject = "Confirmación de mensaje recibido";
         String text = "Hola " + clientName + ",\n\n" +
-                      "Gracias por contactarnos. Hemos recibido tu mensaje y nos pondremos en contacto contigo pronto.\n\n" +
-                      "Saludos,\nEquipo de Portafolio";
+                      "Gracias por contactarme. He recibido tu mensaje y me pondre en contacto contigo pronto.\n\n" +
+                      "Saludos,\nLeo Valdivia Suasnabar";
         sendEmail(clientEmail, subject, text);
     }
 }
