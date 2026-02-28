@@ -1,10 +1,16 @@
 package com.example.backend.backend.controller;
 
+
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
 import com.example.backend.backend.service.EmailService;
 import com.example.backend.backend.model.Message;
 import com.example.backend.backend.repository.MessageRepository;
@@ -19,8 +25,8 @@ public class ControllerMessage {
     @Autowired
     private MessageRepository messageRepository;
 
-    @PostMapping("/send-email")
-    public String sendEmail(@RequestBody Message message) {
+    @PostMapping(value = "/send-email", produces = "application/json")
+    public ResponseEntity <Map<String, String>> sendEmail(@RequestBody Message message) {
         // Save message to database
         messageRepository.save(message);
 
@@ -30,6 +36,8 @@ public class ControllerMessage {
         // Send confirmation email to client
         emailService.sendConfirmationEmail(message.getEmail(), message.getName());
 
-        return "Email sent successfully";
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "Email sent successfully");
+        return ResponseEntity.ok(response);
     }
 }
