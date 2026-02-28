@@ -37,7 +37,7 @@ public CorsConfigurationSource corsConfigurationSource() {
     // IMPORTANTE: Si usas "*" en OriginPatterns, a veces 'setAllowCredentials(true)' 
     // puede dar problemas en navegadores muy estrictos. 
     // Si sigue fallando, prueba cambiando true por false.
-    config.setAllowCredentials(true); 
+    config.setAllowCredentials(false); 
     
     config.setMaxAge(3600L);
 
@@ -46,4 +46,4 @@ public CorsConfigurationSource corsConfigurationSource() {
 
     return source;
 }
-}
+}   
